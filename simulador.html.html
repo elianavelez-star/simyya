@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diseñá tu actividad | Simulador tecno-pedagógico</title>
+<style>
+:root{--navy:#1452EF;--blue:#1452EF;--b2:#E8EEFF;--ink:#20313b;--muted:#536B7A;--line:#D6E0F7;--bg:#F3F6FD;--green:#287b61;--gbg:#eaf5f0;--r:16px}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,"Segoe UI",Arial,sans-serif;line-height:1.5}
+button,input,textarea,select{font:inherit}
+.top{background:linear-gradient(120deg,#1452EF,#3A72F5);color:#fff;padding:30px 22px 26px}
+.in{max-width:1080px;margin:auto}
+.kicker{font-size:.82rem;color:#d3e7f3;font-weight:700}
+h1{font-size:clamp(1.7rem,4vw,2.4rem);line-height:1.15;margin:6px 0}
+.top p{margin:10px 0 0;max-width:850px;font-size:clamp(1.05rem,2.2vw,1.3rem);font-weight:500}
+.wrap{max-width:1080px;margin:24px auto;padding:0 18px 48px}
+.layout{display:grid;grid-template-columns:245px minmax(0,1fr);gap:22px;align-items:start}
+.side,.panel{background:#fff;border:1px solid var(--line);border-radius:var(--r);box-shadow:0 10px 30px rgba(16,75,120,.1)}
+.side{padding:18px;position:sticky;top:16px}
+.st{font-weight:700;color:var(--muted);font-size:.86rem;margin:2px 0 12px}
+.step{display:flex;gap:11px;align-items:center;padding:10px 9px;border-radius:12px;color:var(--muted);font-size:.91rem;margin:4px 0}
+.num{width:28px;height:28px;border-radius:50%;display:grid;place-items:center;background:#edf1f3;color:#63747d;font-weight:700;flex:none}
+.step.active{background:var(--b2);color:var(--navy);font-weight:700}
+.step.active .num{background:var(--blue);color:#fff}
+.step.done .num{background:var(--gbg);color:var(--green)}
+.pl{display:flex;justify-content:space-between;color:var(--muted);font-size:.78rem;margin:16px 0 7px}
+.bar{height:7px;background:#edf1f3;border-radius:20px;overflow:hidden}
+.bar span{display:block;height:100%;width:20%;background:var(--blue);transition:width .25s}
+.panel{padding:clamp(20px,4vw,34px)}
+.tag{color:var(--blue);font-size:1.2rem;font-weight:800}
+h2{font-size:clamp(1.6rem,3vw,1.95rem);color:var(--navy);margin:6px 0}
+h3{margin:0 0 7px;color:var(--navy);font-size:1.02rem}
+.lead{color:var(--muted);margin:0 0 22px}
+.field{margin:18px 0}
+label{display:block;font-weight:700;margin-bottom:6px;color:#294351}
+.hint{font-size:.85rem;color:var(--muted);margin:3px 0 8px}
+input[type=text],textarea,select{width:100%;border:1px solid #cfdbe0;border-radius:11px;padding:11px 13px;background:#fff;color:var(--ink)}
+textarea{min-height:90px;resize:vertical}
+input:focus,textarea:focus,select:focus,button:focus-visible{outline:3px solid rgba(20,82,239,.3);border-color:var(--blue)}
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.g3{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px}
+.callout{background:var(--b2);border-left:4px solid var(--blue);padding:13px 16px;border-radius:10px;color:#12307F;font-size:.94rem;margin:18px 0}
+.actions{display:flex;justify-content:space-between;gap:12px;margin-top:24px;flex-wrap:wrap}
+.btn{border:0;border-radius:11px;padding:11px 18px;font-weight:700;cursor:pointer}
+.primary{background:#1452EF;color:#fff}.primary:hover{background:#0F42C4}
+.secondary{background:#edf2f4;color:#34505d}.secondary:hover{background:#e2eaed}
+.ghost{border:1px solid #7F9FF7;background:#E8EEFF;color:#0F42C4;border-radius:10px;padding:9px 13px;font-weight:700;cursor:pointer}
+.ghost:hover{background:#D5E1FF}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin:12px 0}
+.card{border:1px solid var(--line);border-radius:13px;padding:14px;text-align:left;background:#fff;cursor:pointer;color:var(--ink)}
+.card:hover{border-color:#5B83F3;background:#F4F7FF}
+.card.sel{border:2px solid #1452EF;background:#E8EEFF;padding:13px}
+.card b{display:block;color:var(--navy);margin-bottom:3px}
+.card span{display:block;color:var(--muted);font-size:.86rem}
+.kind{display:inline-block;margin-top:8px;background:#edf3f5;border-radius:20px;padding:2px 9px;font-size:.74rem;color:#49616d}
+.bd{display:inline-block;margin:8px 0 0 6px;border-radius:20px;padding:2px 9px;font-size:.74rem;background:var(--b2);color:#0F42C4;font-weight:700}
+.bd.hi{background:var(--gbg);color:var(--green)}
+.ej{border-top:1px dashed var(--line);margin-top:9px;padding-top:7px;font-size:.84rem;color:#3d5a69}
+.box{background:#F0F4FF;border:1px solid #BFD0FB;border-radius:12px;padding:14px 16px;margin:12px 0;color:#1B3A8A}
+.box ul{margin:6px 0 0;padding-left:20px}.box li{margin:5px 0}
+.exr{display:flex;gap:12px;justify-content:space-between;align-items:center;padding:9px 0;border-top:1px solid #D3DEFB;font-size:.92rem}
+.exr:first-of-type{border-top:0}
+.sum{border:1px solid var(--line);border-radius:13px;padding:14px 16px;margin:14px 0;background:#fbfcfd}
+.sum p{margin:0;white-space:pre-wrap}
+.output{background:#fbfdfc;border:1px solid #cfe3d9;border-radius:14px;padding:20px}
+.output h3{color:var(--green);margin-bottom:12px}
+.os{padding:11px 0;border-top:1px solid #e0ebe5}.os:first-of-type{border-top:0}
+.os b{display:block;color:#315746;margin-bottom:3px}
+.os p{margin:0;white-space:pre-wrap}
+.note{font-size:.85rem;color:var(--muted);margin:8px 0}
+.hidden{display:none!important}
+.footer{font-size:.78rem;color:#7b8b92;text-align:center;margin-top:20px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:14px 0}
+.tab{border:2px solid var(--line);background:#fff;color:var(--navy);border-radius:12px;padding:9px 14px;font-weight:700;cursor:pointer}
+.tab.sel{border-color:var(--blue);background:var(--blue);color:#fff}
+.pick{font-size:1.25rem;font-weight:800;color:var(--navy);background:var(--b2);border:2px dashed var(--blue);border-radius:14px;padding:16px 20px;margin:12px 0}
+.pick.on{border-style:solid}
+.pick small{display:block;font-size:.98rem;font-weight:500;color:#2d4a6b;margin-top:5px}
+.callout.ask{font-size:1.12rem;font-weight:600;padding:18px 22px;border-left:8px solid var(--blue);background:linear-gradient(90deg,#DCE6FF,#F1F5FF);box-shadow:0 6px 18px rgba(20,82,239,.15)}
+.callout.ask::before{content:"Pausa para pensar";display:block;font-size:.92rem;font-weight:800;color:var(--blue);margin-bottom:4px}
+.ejt{margin-top:7px;font-size:.82rem;color:#3d5a69}
+.ejt i{font-style:normal;background:#FFF1D6;color:#8a5a00;border-radius:20px;padding:1px 8px;margin-right:6px;font-weight:700}
+.exr .ghost{flex:none}
+.sum b,.os b{color:var(--navy)}
+@media(max-width:760px){.layout{grid-template-columns:1fr}.side{position:static}.g2,.g3,.grid{grid-template-columns:1fr}.top{padding:22px 18px}}
+@media print{body{background:#fff}.top,.side,.actions,.footer{display:none!important}.wrap{margin:0;padding:0}.layout{display:block}.panel{border:0;box-shadow:none;padding:0}#s5{display:block!important}}
+</style>
+</head>
+<body>
+<header class="top"><div class="in">
+ <div class="kicker">Simulador de diseño de actividades mediadas por tecnología</div>
+ <h1>Diseñá tu actividad</h1>
+ <p>Tomá decisiones sobre la experiencia de aprendizaje y las herramientas, anticipá qué cambia con cada una y construí una propuesta coherente con tus propósitos.</p>
+</div></header>
+<div class="wrap"><div class="layout">
+ <aside class="side">
+  <div class="st">Tu recorrido de diseño</div>
+  <nav>
+   <div class="step active" data-n="1"><span class="num">1</span><span>Contexto de enseñanza</span></div>
+   <div class="step" data-n="2"><span class="num">2</span><span>Experiencia de aprendizaje</span></div>
+   <div class="step" data-n="3"><span class="num">3</span><span>Herramientas y decisiones</span></div>
+   <div class="step" data-n="4"><span class="num">4</span><span>Diseño de la actividad</span></div>
+   <div class="step" data-n="5"><span class="num">5</span><span>Propuesta final</span></div>
+  </nav>
+  <div class="pl"><span>Avance</span><b id="pt">20%</b></div>
+  <div class="bar"><span id="pb"></span></div>
+ </aside>
+ <main>
+  <section class="panel stage" id="s1">
+   <div class="tag">Etapa 1 · Punto de partida</div>
+   <h2>Conozcamos tu contexto de enseñanza</h2>
+   <p class="lead">Partamos de tu práctica: qué querés trabajar y qué necesitás resolver.</p>
+   <div class="field"><label for="goal">1. ¿Qué propósito educativo querés alcanzar?</label><div class="hint">¿Qué esperás que tus estudiantes aprendan, comprendan o sean capaces de hacer?</div><textarea id="goal" placeholder="Ej.: Que puedan interpretar indicadores económicos y usarlos para argumentar decisiones..."></textarea></div>
+   <div class="field"><label for="content">2. ¿Qué contenido o tema de tu asignatura querés trabajar?</label><textarea id="content" placeholder="Indicá el tema o contenido específico..."></textarea></div>
+   <div class="field"><label for="need">3. ¿Qué necesidad, dificultad o desafío de enseñanza querés abordar?</label><div class="hint">¿Qué te está pasando en tus clases o qué te gustaría mejorar?</div><textarea id="need" placeholder="Ej.: Les cuesta relacionar los conceptos teóricos con situaciones reales..."></textarea></div>
+   <div class="field"><label>4. ¿A quiénes está destinada la actividad?</label><div class="hint">Completá los datos que consideres relevantes.</div>
+    <div class="g2">
+     <div><label for="career">Carrera / asignatura</label><input id="career" type="text" placeholder="Ej.: Contador Público / Economía"></div>
+     <div><label for="level">Nivel académico</label><input id="level" type="text" placeholder="Ej.: 2.º año / ciclo inicial"></div>
+     <div><label for="age">Edad aproximada</label><input id="age" type="text" placeholder="Ej.: 19 a 25 años"></div>
+     <div><label for="prior">Conocimientos previos</label><input id="prior" type="text" placeholder="Ej.: Manejan conceptos básicos..."></div>
+    </div>
+    <div class="field"><label for="group">Otras características del grupo (opcional)</label><textarea id="group" placeholder="Cantidad de estudiantes, acceso a dispositivos, experiencias previas, etc."></textarea></div>
+   </div>
+   <div class="callout">No necesitás tener todo cerrado. Este registro orienta las decisiones que vas a tomar: el simulador lo va a usar para sugerirte alternativas.</div>
+   <div class="actions"><span></span><button class="btn primary" onclick="go(2)">Continuar →</button></div>
+  </section>
+
+  <section class="panel stage hidden" id="s2">
+   <div class="tag">Etapa 2 · Decisión pedagógica</div>
+   <h2>¿Qué experiencia de aprendizaje querés proponer?</h2>
+   <p class="lead">Antes de elegir tecnología, decidí qué van a vivir tus estudiantes. Esta elección ordena las herramientas y los ejemplos de la etapa siguiente.</p>
+   <div class="sum"><h3>Tu punto de partida</h3><p id="ctx"></p></div>
+   <label>Elegí uno o más tipos de experiencia que se acerquen a tu propósito</label><div class="hint">Podés combinar varias: en la etapa siguiente elegís una herramienta para cada una.</div>
+   <div class="grid" id="expGrid"></div>
+   <div class="field"><label for="studentAction">¿Qué harían concretamente los estudiantes?</label><textarea id="studentAction" placeholder="Describí las acciones que imaginás: qué analizan, resuelven, discuten, producen..."></textarea></div>
+   <div class="g2">
+    <div class="field"><label for="modality">¿Cómo trabajarían?</label><select id="modality"><option value="">Elegí una posibilidad (o dejalo sin definir)</option><option>Individualmente</option><option>En parejas</option><option>En pequeños grupos</option><option>En equipos y puesta en común</option><option>Combinando momentos individuales y grupales</option></select></div>
+    <div class="field"><label for="evidence">¿Qué evidencia te permitiría reconocer el aprendizaje?</label><textarea id="evidence" style="min-height:48px" placeholder="Ej.: una resolución fundamentada, un informe breve..."></textarea><div class="hint" id="evHint"></div></div>
+   </div>
+   <div class="callout ask">Para revisar: ¿las acciones que imaginás permiten que los estudiantes pongan en juego lo que definiste como propósito?</div>
+   <div class="actions"><button class="btn secondary" onclick="go(1)">← Volver</button><button class="btn primary" onclick="go(3)">Explorar herramientas →</button></div>
+  </section>
+
+  <section class="panel stage hidden" id="s3">
+   <div class="tag">Etapa 3 · Herramientas y decisiones</div>
+   <h2>¿Qué herramienta puede sostener esa experiencia?</h2>
+   <p class="lead">Se elige por su aporte al aprendizaje, no por la novedad. Las herramientas se ordenan según su afinidad con la experiencia que elegiste; después, tus decisiones de uso cambian el escenario que se anticipa.</p>
+   <div class="sum"><h3>Recordá tu propósito y tus experiencias elegidas</h3><p id="gp"></p></div><div class="tabs" id="tabs"></div>
+   <div class="g2"><div><input id="knownTool" type="text" oninput="renderScen()" placeholder="¿Ya tenés otra herramienta en mente? Escribila"></div>
+    <div><select id="toolStatus"><option value="">¿Qué relación tenés con ella?</option><option>Ya la utilicé con estudiantes</option><option>La conozco, pero no la utilicé</option><option>Quiero explorar alternativas</option><option>No tengo una herramienta definida</option></select></div></div>
+   <div class="help-actions" style="margin:14px 0 0"><button type="button" class="ghost" id="exBtn" onclick="toggleEx()">Ver ejemplos de actividades</button></div>
+   <div class="box hidden" id="exBox"></div>
+   <div class="grid" id="toolGrid"></div>
+   <div class="actions" style="margin:0 0 6px"><button type="button" class="ghost" id="moreBtn" onclick="D(state.cur).more=true;renderTools()">Ver más herramientas</button></div>
+   <div class="pick" id="toolNote"></div>
+   <h3 style="margin-top:22px">Decisiones de uso para la experiencia seleccionada</h3>
+   <div class="g3">
+    <div><label for="init">¿Quién la usa con más protagonismo?</label><select id="init" onchange="renderScen()"><option value="">Elegí</option><option>Los estudiantes</option><option>El docente</option><option>Ambos</option></select></div>
+    <div><label for="when">¿En qué momento?</label><select id="when" onchange="renderScen()"><option value="">Elegí</option><option>Antes de la clase</option><option>Durante la clase</option><option>Después de la clase</option></select></div>
+    <div><label for="fb">¿Quién da retroalimentación?</label><select id="fb" onchange="renderScen()"><option value="">Elegí</option><option>La propia herramienta</option><option>El docente</option><option>Los pares</option><option>La IA con revisión crítica</option></select></div>
+   </div>
+   <div class="box"><h3>Escenario que se anticipa</h3><ul id="scen"></ul></div>
+   <div class="field"><label for="toolReason">¿Por qué esta herramienta ayuda a alcanzar tu propósito?</label><textarea id="toolReason" placeholder="Qué aporte esperás de la herramienta en esta actividad..."></textarea></div>
+   <div class="field"><label for="toolUse">¿Cómo la usarían los estudiantes y en qué momento?</label><textarea id="toolUse" placeholder="Para qué, con qué frecuencia y en qué parte de la actividad..."></textarea></div>
+   <div class="callout ask">Antes de decidir: ¿la herramienta permite las acciones que imaginaste? ¿Es adecuada para el nivel, los conocimientos previos y el acceso de tu grupo? Si no, probá con otra alternativa o cambiá una decisión de uso y mirá qué se modifica.</div>
+   <div class="actions"><button class="btn secondary" onclick="go(2)">← Volver</button><button class="btn primary" onclick="go(4)">Diseñar la actividad →</button></div>
+  </section>
+
+  <section class="panel stage hidden" id="s4">
+   <div class="tag">Etapa 4 · Diseño de la actividad</div>
+   <h2>Integrá experiencia, herramienta y secuencia</h2>
+   <p class="lead">Una actividad es más que una consigna: combina qué hacen los estudiantes, con qué herramienta, en qué orden y cómo se reconoce lo aprendido.</p>
+   <div class="sum"><h3>Decisiones que ya tomaste</h3><p id="dec"></p></div>
+   <div class="field"><label for="activity">¿Qué actividad van a realizar?</label><textarea id="activity" placeholder="Describí la actividad, en coherencia con la experiencia y la herramienta elegidas..."></textarea></div>
+   <div class="field"><label for="steps">Secuencia de trabajo</label><div class="hint">Organizala en momentos: antes, durante y después. Indicá cuándo interviene la herramienta y cuándo el docente.</div><textarea id="steps" placeholder="Ej.: 1. Leen el caso. 2. Usan la herramienta. 3. Comparan resultados. 4. Entregan una conclusión..."></textarea></div>
+   <div class="field"><label for="instructions">Consigna para los estudiantes</label><div class="hint">Escribila como si les hablaras: qué hacer, con qué recursos, qué entregar y cómo organizarse.</div><div style="margin:8px 0"><button type="button" class="ghost" id="wBtn" onclick="toggleW()">Ver ejemplos de redacción</button></div><div class="box hidden" id="wBox"></div><textarea id="instructions" style="min-height:150px" placeholder="Les proponemos...&#10;1. ...&#10;Para finalizar, deberán entregar..."></textarea></div>
+   <div class="callout ask">Revisá desde la perspectiva de tus estudiantes: ¿queda claro qué hacer, para qué y cuál es el resultado esperado? ¿La herramienta está integrada a la tarea o aparece como un agregado?</div>
+   <div class="actions"><button class="btn secondary" onclick="go(3)">← Volver</button><button class="btn primary" onclick="build()">Ver mi propuesta final →</button></div>
+  </section>
+
+  <section class="panel stage hidden" id="s5">
+   <div class="tag">Etapa 5 · Resultado del recorrido</div>
+   <h2>Tu actividad diseñada</h2>
+   <p class="lead">La propuesta reúne las decisiones de todo el recorrido, los efectos que anticipaste y una revisión de coherencia.</p>
+   <div class="output"><h3>Propuesta de actividad</h3><div id="out"></div></div>
+   <div class="field"><label for="reflection">Una última revisión: ¿qué decisión fue la más importante? ¿Qué revisarías o mejorarías?</label><textarea id="reflection" placeholder="Registrá una breve reflexión sobre las decisiones que tomaste..."></textarea></div>
+   <div class="callout">Es una primera versión de diseño: podés volver a cualquier etapa, cambiar una decisión y regenerar la propuesta.</div>
+   <div class="actions"><button class="btn secondary" onclick="go(4)">← Revisar diseño</button><div style="display:flex;gap:9px;flex-wrap:wrap"><button class="btn secondary" onclick="window.print()">Imprimir / Guardar PDF</button><button class="btn primary" onclick="download()">Descargar propuesta</button></div></div>
+  </section>
+  <div class="footer">Prototipo · Simulador de diseño de actividades de enseñanza mediadas por tecnología e IA · v4</div>
+ </main>
+</div></div>
+<script>
+const $=id=>document.getElementById(id),val=id=>$(id).value.trim();
+const state={exps:[],cur:-1,d:{},w:false,ex:false};
+// Experiencias: nombre, descripción, sugerencia de evidencia
+const E=[
+["Analizar casos y datos","Interpretar información, reconocer patrones y explicar situaciones reales.","Un análisis fundamentado, una interpretación de datos o un informe breve."],
+["Argumentar y decidir","Comparar alternativas, defender una postura y justificarla con evidencias.","Una decisión justificada o una réplica fundamentada a otra postura."],
+["Explorar escenarios","Modificar variables, anticipar consecuencias y comparar resultados.","Una comparación de escenarios que explique qué cambia y por qué."],
+["Producir y crear","Elaborar un recurso, una explicación o un producto propio.","Un borrador y su versión final, o un recurso elaborado."],
+["Practicar y aplicar","Resolver problemas, aplicar procedimientos y recibir retroalimentación.","Resoluciones con su justificación y la corrección de errores."],
+["Reflexionar sobre el propio aprendizaje","Revisar lo realizado, detectar dudas y decidir qué mejorar.","Una bitácora, una autoevaluación o una explicación de los cambios hechos."]];
+// Herramientas: nombre, tipo, aporte, ejemplo, afinidad (analizar,argumentar,explorar,producir,practicar,reflexionar: 0-2), a tener en cuenta
+const T=[
+["Cuestionario (Moodle)","Práctica y retroalimentación","Recupera saberes y da retroalimentación inmediata.","Ocho preguntas sobre un caso de costos, con comentarios que explican cada error frecuente.","100021","Puede quedar en memorización si las preguntas no exigen aplicar."],
+["Foro de debate (Moodle)","Participación","Promueve intercambio de perspectivas y argumentación.","Dos posturas sobre una medida económica: cada estudiante defiende una con datos y responde a un par.","120001","Sin consigna y roles claros, deriva en intervenciones aisladas."],
+["Tarea (Moodle)","Producción","Orienta una producción individual o grupal con devolución docente.","Informe de una página con una recomendación fundamentada, evaluado con rúbrica.","110211","Sin criterios explícitos, la devolución es tardía y general."],
+["Simulador o planilla de cálculo","Experimentación","Permite variar parámetros y comparar escenarios.","Planilla con tasa, inflación y tipo de cambio para comparar tres escenarios y explicar las diferencias.","112010","Requiere acceso y tiempo para explorar sin perderse en los números."],
+["Visualización de datos","Análisis","Representa información para reconocer patrones y tendencias.","Tablero con la serie histórica de precios para identificar tendencias y anomalías.","211100","El gráfico no reemplaza la interpretación: hay que pedirla."],
+["IA como interlocutor","IA","Formula preguntas orientadoras, objeciones y explicaciones alternativas.","Piden a la IA que objete su recomendación y registran qué objeciones aceptan y cuáles descartan, con razones.","121112","La IA puede errar o complacer: pedí que verifiquen y contrasten."],
+["Taller de evaluación entre pares (Moodle)","Evaluación entre pares","Organiza entrega, evaluación con rúbrica y mejora del propio trabajo.","Suben un borrador, evalúan dos trabajos con rúbrica y ajustan el propio.","010202","Exige rúbrica clara y un calendario en dos fases."],
+["Video o actividad interactiva (H5P)","Práctica y comprensión","Incorpora preguntas y decisiones dentro de un recurso audiovisual.","Video de 6 minutos sobre un balance con preguntas incrustadas.","200021","Es más receptivo: la interacción depende de las preguntas incrustadas."],
+["Wiki o documento colaborativo","Construcción colectiva","Permite construir y revisar un producto entre varios.","Wiki grupal con un glosario de conceptos ilustrado con casos reales.","100201","Puede quedar desparejo: conviene asignar partes y revisar versiones."],
+["IA para generar casos y datos","IA","Genera variantes de casos, ejemplos y datos ficticios para trabajar.","La IA produce tres versiones de un caso de PyME con datos distintos; cada grupo trabaja una y compara.","202120","Los casos generados necesitan revisión docente antes de usarse."],
+["IA como revisora de borradores","IA","Comenta claridad y estructura antes de la entrega.","Reciben comentarios de la IA sobre su borrador y entregan una nota sobre qué cambios aceptaron y por qué.","000202","Puede reemplazar la escritura propia: pedí registro de los cambios."],
+["Lección ramificada (Moodle)","Secuenciación","Presenta decisiones con consecuencias según lo que elige cada estudiante.","Lección con un caso en el que cada decisión lleva a un refuerzo o a una nueva situación.","112011","Armarla lleva trabajo previo: pocas ramas y significativas."]];
+// Ejemplos de actividades: experiencia, herramienta, descripción
+const X=[
+[0,4,"Detectar la anomalía: en un tablero de ventas por región, identifican qué dato no encaja y proponen explicaciones."],
+[0,9,"Casos con variantes: la IA genera tres versiones de un caso de PyME; cada grupo analiza una y compara conclusiones."],
+[1,1,"Dos posturas: defienden en el foro una medida económica con datos y responden con una objeción fundamentada."],
+[1,5,"Abogado del diablo: piden a la IA que objete su recomendación y justifican qué aceptan y qué descartan."],
+[2,3,"Tres escenarios: modifican tasa e inflación en una planilla y explican qué cambia en el resultado."],
+[2,11,"Caso con decisiones: según lo que elijan en cada paso, reciben consecuencias distintas y justifican el rumbo."],
+[3,6,"Borrador y pares: suben un informe breve, evalúan dos trabajos con rúbrica y reescriben el propio."],
+[3,8,"Glosario vivo: definen conceptos clave en una wiki grupal y los ilustran con un caso real."],
+[4,0,"Errores frecuentes: cada respuesta incorrecta devuelve una pista y remite al material de estudio."],
+[4,7,"Video con preguntas: ven una explicación breve con preguntas incrustadas y registran sus dudas."],
+[5,10,"Revisión con IA: reciben comentarios sobre su borrador y explican qué cambios aceptaron y por qué."],
+[5,2,"Bitácora: entregan una tarea breve que explica qué cambiarían de su trabajo y qué aprendieron."]];
+// Consecuencias de las decisiones de uso
+const C={
+i:{"Los estudiantes":"Iniciativa de los estudiantes: más autonomía y protagonismo; requiere una consigna con criterios claros y andamiaje.","El docente":"Iniciativa del docente: más control y previsibilidad, pero menor margen para la exploración propia.","Ambos":"Iniciativa compartida: equilibra guía y autonomía; conviene definir qué decide cada uno."},
+w:{"Antes de la clase":"Antes de la clase: prepara la discusión y recupera saberes previos, pero exige que lleguen con tiempo y lectura hecha.","Durante la clase":"Durante la clase: favorece la interacción inmediata; depende del tiempo disponible y de la conectividad.","Después de la clase":"Después de la clase: consolida y transfiere; hay riesgo de baja participación si no se integra a la evaluación."},
+f:{"La propia herramienta":"Retroalimentación de la herramienta: inmediata y escalable, pero limitada a lo previsto de antemano.","El docente":"Retroalimentación docente: orientación precisa; la carga de tiempo crece con el tamaño del grupo.","Los pares":"Retroalimentación entre pares: desarrolla criterio y mirada crítica; requiere rúbrica y orientación para comentar.","La IA con revisión crítica":"Retroalimentación de la IA: ágil y personalizada; exige verificar sus contenidos y enseñar a evaluarlos críticamente."}};
+const AF=["Aporte complementario","Afinidad media","Afinidad alta"];
+const TE=["Cuestionario de Moodle, Kahoot, Google Forms","Foro de Moodle, Padlet","Tarea de Moodle, Google Docs","Excel, Google Sheets, GeoGebra","Looker Studio, Power BI, Datawrapper","Claude, ChatGPT, Gemini, Copilot","Taller de Moodle","H5P en Moodle, Genially","Wiki de Moodle, Google Docs","Claude, ChatGPT, Gemini","Claude, ChatGPT, Gemini","Lección de Moodle","NotebookLM, Canva, Claude","NotebookLM, Claude, ChatGPT"];
+T.push(["Infografía o recurso visual con IA","IA","Sintetiza y comunica un concepto de forma visual, con IA para organizar la información.","Elaboran una infografía que explica un concepto con un caso real y justifican qué incluyeron y qué dejaron afuera.","100201","Lo visual puede tapar el contenido: pedí que justifiquen cada elemento."],
+["Cuaderno de fuentes con IA","IA","Permite consultar las lecturas del curso y obtener resúmenes y respuestas ligadas a esas fuentes.","Cargan las lecturas, formulan tres preguntas para interpretar un caso y verifican las respuestas con el texto original.","210111","Las respuestas pueden simplificar: hay que pedir que verifiquen contra la fuente."]);
+X.push([3,12,"Infografía: sintetizan un concepto en una infografía (por ejemplo con NotebookLM o Canva) y justifican qué incluyeron y qué dejaron afuera."],
+[0,13,"Fuentes propias: cargan las lecturas del curso en un cuaderno con IA (por ejemplo NotebookLM), formulan preguntas sobre el caso y verifican cada respuesta con el texto."],
+[1,5,"Entrevista a la IA: dialogan con un asistente (por ejemplo Claude) sobre una decisión y reconstruyen qué argumentos fueron útiles y cuáles no."],
+[5,12,"Mapa de lo aprendido: arman un resumen visual (por ejemplo con Canva) de lo que comprendieron y marcan qué sigue sin quedar claro."],
+[2,9,"Variaciones con IA: piden a un asistente (por ejemplo ChatGPT o Gemini) nuevos datos para el escenario y comparan cómo cambian las conclusiones."]);
+const W=[["analizar, identificar, interpretar","Analicen {c} con ayuda de {h}. Identifiquen al menos dos patrones o datos relevantes y expliquen qué conceptos permiten interpretarlos.","A mitad de la actividad, compartan con un compañero qué patrón encontraron y qué dato les generó dudas."],
+["comparar, justificar, defender","Comparen las alternativas planteadas sobre {c} y justifiquen su decisión con evidencias, utilizando {h}.","Antes de la entrega, lean la postura de otro grupo y respondan con una pregunta o una objeción fundamentada."],
+["explorar, modificar, anticipar","Modifiquen las variables de {c} en {h}, comparen al menos dos escenarios y expliquen qué cambia y por qué.","Registren una predicción antes de probar cada escenario y contrástenla con el resultado obtenido."],
+["elaborar, diseñar, explicar","Elaboren una producción sobre {c} utilizando {h} y expliquen las decisiones que tomaron al construirla.","Compartan un borrador parcial para recibir un comentario y decidan qué ajustar."],
+["resolver, aplicar, revisar","Resuelvan las situaciones propuestas sobre {c} con {h}, expliquen los pasos seguidos y revisen los errores que aparezcan.","Después de recibir retroalimentación, reescriban una respuesta y señalen qué cambió en su razonamiento."],
+["revisar, explicar, decidir","Revisen lo realizado con {h} y expliquen qué comprendieron mejor, qué dudas quedan y qué cambiarían de su trabajo.","Registren en una frase una decisión que tomaron durante la actividad y el motivo."]];
+const MD={"Individualmente":"Trabajen de manera individual y reserven un momento final para revisar su propia producción.","En parejas":"Trabajen en parejas: cada integrante propone una interpretación y luego las contrastan.","En pequeños grupos":"Organícense en grupos de tres o cuatro y acuerden quién registra las decisiones del equipo.","En equipos y puesta en común":"Trabajen en equipos y luego compartan sus conclusiones con todo el curso.","Combinando momentos individuales y grupales":"Comiencen de manera individual y luego pongan en común sus resultados en pequeños grupos."};
+const IDS=["knownTool","toolStatus","init","when","fb","toolReason","toolUse"];
+const D=e=>state.d[e]||(state.d[e]={tool:-1,more:false,seen:[],f:{}});
+const fit=i=>Number(T[i][4][state.cur]);
+function el(tag,cls,txt){const e=document.createElement(tag);if(cls)e.className=cls;if(txt!==undefined)e.textContent=txt;return e}
+function fmt(p,text){p.textContent="";const a=text.split("\n");a.forEach((ln,i)=>{const m=ln.match(/^([^:•○✓\n]{2,45}):\s([\s\S]*)$/);if(m)p.append(el("b","",m[1]+":"),document.createTextNode(" "+m[2]));else p.append(document.createTextNode(ln));if(i<a.length-1)p.append(document.createTextNode("\n"))})}
+function saveCur(){if(state.cur<0)return;const d=D(state.cur);IDS.forEach(i=>d.f[i]=$(i).value)}
+function loadCur(){const d=D(state.cur);IDS.forEach(i=>$(i).value=d.f[i]||"")}
+function setCur(e){saveCur();state.cur=e;loadCur();render3()}
+function render3(){renderTabs();renderTools();renderEx();renderNote();renderScen()}
+function renderExp(){const g=$("expGrid");g.innerHTML="";
+ E.forEach((x,i)=>{const on=state.exps.includes(i),b=el("button","card"+(on?" sel":""));b.type="button";b.append(el("b","",(on?"✓ ":"")+x[0]),el("span","",x[1]));
+  b.onclick=()=>{on?state.exps.splice(state.exps.indexOf(i),1):state.exps.push(i);renderExp()};g.append(b)});
+ $("evHint").textContent=state.exps.length?"Por ejemplo: "+state.exps.map(e=>E[e][2]).join(" "):""}
+function renderTabs(){const t=$("tabs");t.innerHTML="";
+ state.exps.forEach(e=>{const b=el("button","tab"+(e===state.cur?" sel":""),(D(e).tool>=0?"✓ ":"")+E[e][0]);b.type="button";b.onclick=()=>setCur(e);t.append(b)})}
+function renderTools(){const d=D(state.cur),idx=T.map((_,i)=>i).sort((a,b)=>fit(b)-fit(a)||a-b),shown=d.more?idx:idx.slice(0,6),g=$("toolGrid");g.innerHTML="";
+ shown.forEach(i=>{const t=T[i],b=el("button","card"+(d.tool===i?" sel":""));b.type="button";
+  b.append(el("b","",t[0]),el("span","",t[2]),el("i","kind",t[1]),el("i","bd"+(fit(i)==2?" hi":""),AF[fit(i)]),el("div","ej","Ejemplo de uso: "+t[3]));
+  const e=el("div","ejt");e.append(el("i","","Solo como ejemplo"),document.createTextNode(TE[i]));b.append(e);
+  b.onclick=()=>pick(i);g.append(b)});
+ $("moreBtn").classList.toggle("hidden",d.more)}
+function pick(i){const d=D(state.cur);d.tool=i;if(!d.seen.includes(i))d.seen.push(i);if(!val("toolReason"))$("toolReason").value=T[i][2];renderTabs();renderTools();renderNote();renderScen()}
+function renderNote(){const d=D(state.cur),n=$("toolNote"),k=E[state.cur][0];n.innerHTML="";n.className="pick"+(d.tool>=0?" on":"");
+ n.append(document.createTextNode(d.tool>=0?"Elegiste para «"+k+"»: "+T[d.tool][0]:"Todavía no elegiste una herramienta para «"+k+"»"),
+  el("small","",d.tool>=0?"Podés cambiar de herramienta y ver cómo se modifica el escenario.":"Elegí una de la lista o escribí otra en el campo de arriba."))}
+function toggleEx(){state.ex=!state.ex;renderEx()}
+function renderEx(){const b=$("exBox");b.classList.toggle("hidden",!state.ex);$("exBtn").textContent=state.ex?"Ocultar ejemplos":"Ver ejemplos de actividades";if(!state.ex)return;b.innerHTML="";
+ b.append(el("h3","","Ejemplos para «"+E[state.cur][0]+"»"));
+ X.forEach((x,k)=>{if(x[0]!==state.cur)return;const r=el("div","exr"),d=el("div");d.append(el("span","",x[2]+" "),el("i","kind",T[x[1]][0]));r.append(d);
+  const u=el("button","ghost","Usar como punto de partida");u.type="button";u.onclick=()=>useEx(k);r.append(u);b.append(r)})}
+function useEx(k){const x=X[k];if(!val("activity").includes(x[2]))$("activity").value=(val("activity")?val("activity")+"\n":"")+x[2];pick(x[1])}
+function scenOf(e){const d=D(e),f=d.f,L=[],t=d.tool>=0?T[d.tool]:null,ft=t?Number(t[4][e]):0;
+ if(t){L.push("Aporte de la herramienta: "+t[2]);L.push(AF[ft]+" con «"+E[e][0]+"»."+(ft==0?" No es la opción más habitual para esta experiencia: revisá si lo que imaginás es viable o combinala con otra herramienta.":""))}
+ else if(f.knownTool)L.push("Herramienta propia: "+f.knownTool+". Contrastá su aporte con tu propósito antes de decidir.");
+ [["init","i"],["when","w"],["fb","f"]].forEach(([id,k])=>{if(f[id])L.push(C[k][f[id]])});
+ if(t)L.push("A tener en cuenta: "+t[5]);return L}
+function renderScen(){saveCur();const u=$("scen");u.innerHTML="";const L=scenOf(state.cur);
+ if(!L.length)u.append(el("li","","Elegí una herramienta y definí cómo se usará: acá vas a ver qué cambia en la experiencia de aprendizaje."));
+ L.forEach(s=>{const li=el("li");fmt(li,s);u.append(li)});
+ const f=["init","when","fb"].filter(id=>!$(id).value).length;
+ if(L.length&&f)u.append(el("li","","Todavía podés definir "+(f==1?"una decisión más":f+" decisiones más")+" para ver su efecto."))}
+function stage(n){
+ document.querySelectorAll(".stage").forEach(s=>s.classList.add("hidden"));$("s"+n).classList.remove("hidden");
+ document.querySelectorAll(".step").forEach(e=>{const k=+e.dataset.n;e.classList.toggle("active",k===n);e.classList.toggle("done",k<n);e.querySelector(".num").textContent=k<n?"✓":k});
+ $("pb").style.width=n*20+"%";$("pt").textContent=n*20+"%";window.scrollTo({top:0,behavior:"smooth"})}
+const dest=()=>[val("career"),val("level"),val("age"),val("prior"),val("group")].filter(Boolean).join(" · ");
+const tn=e=>D(e).tool>=0?T[D(e).tool][0]:(D(e).f.knownTool||"A definir");
+function go(n){saveCur();
+ if(n===2&&!val("goal")){alert("Completá al menos el propósito educativo para continuar.");$("goal").focus();return}
+ if(n===2)fmt($("ctx"),"Propósito: "+(val("goal")||"No especificado")+"\nContenido: "+(val("content")||"No especificado")+"\nNecesidad: "+(val("need")||"No especificada")+"\nDestinatarios: "+(dest()||"No especificados"));
+ if(n===3){if(!state.exps.length){alert("Elegí al menos un tipo de experiencia de aprendizaje: ordena las herramientas y los ejemplos de la etapa siguiente.");return}
+  if(!state.exps.includes(state.cur)){state.cur=state.exps[0];loadCur()}
+  fmt($("gp"),"Propósito: "+val("goal")+"\nExperiencias: "+state.exps.map(e=>E[e][0]).join(", "));render3()}
+ if(n===4){const m=state.exps.filter(e=>D(e).tool<0&&!D(e).f.knownTool);
+  if(m.length){alert("Falta elegir una herramienta para: "+m.map(e=>E[e][0]).join(", ")+".");return}
+  fmt($("dec"),"Acciones de los estudiantes: "+(val("studentAction")||"A definir")+"\nModalidad: "+(val("modality")||"A definir")+"\nEvidencia: "+(val("evidence")||"A definir")+"\n"+state.exps.map(e=>E[e][0]+": "+tn(e)).join("\n"));renderW()}
+ stage(n)}
+function toggleW(){state.w=!state.w;renderW()}
+function renderW(){const b=$("wBox");b.classList.toggle("hidden",!state.w);$("wBtn").textContent=state.w?"Ocultar ejemplos de redacción":"Ver ejemplos de redacción";if(!state.w)return;b.innerHTML="";saveCur();
+ const c=val("content")||"el tema trabajado",ev=val("evidence")||"una producción que muestre su razonamiento",R=[];let ia=false;
+ b.append(el("h3","","Modelos de redacción armados con tus decisiones"),el("p","note","Son ejemplos para inspirarte: podés adaptarlos, combinarlos o reescribirlos con tu estilo."));
+ state.exps.forEach(e=>{const d=D(e),h=d.tool>=0?T[d.tool][0]:(d.f.knownTool||"la herramienta elegida");
+  R.push(["Consigna para «"+E[e][0]+"» (verbos posibles: "+W[e][0]+")",W[e][1].replace(/\{c\}/g,c).replace(/\{h\}/g,h)]);
+  R.push(["Intervención posible durante el proceso",W[e][2]]);
+  if(d.tool>=0&&T[d.tool][1]==="IA"&&!ia){ia=true;R.push(["Si se usa IA: registro del uso","Registren qué le pidieron a la IA, qué respuestas tomaron, cuáles descartaron y por qué."])}});
+ R.push(["Organización del trabajo",MD[val("modality")]||"Indiquen cómo van a organizarse y quién se ocupa de cada parte."],["Entrega","Para finalizar, entreguen "+ev+"."],["Criterios de valoración","Se tendrá en cuenta que las conclusiones estén fundamentadas en los datos y en los conceptos trabajados."],["Cierre","Al terminar, escriban en dos líneas qué decisión consideran más importante y por qué."]);
+ R.forEach(([l,t])=>{const r=el("div","exr"),d=el("div");d.append(el("b","",l),el("br"),el("span","",t));r.append(d);
+  const u=el("button","ghost","Agregar a la consigna");u.type="button";u.onclick=()=>{$("instructions").value+=($("instructions").value?"\n":"")+t};r.append(u);b.append(r)})}
+function checks(){const ok=(c,y,n)=>(c?"✓ ":"○ Revisar: ")+(c?y:n),L=[];
+ state.exps.forEach(e=>{const d=D(e),k="«"+E[e][0]+"»: ";
+  L.push(d.tool<0?"○ Revisar: "+k+"herramienta propia; contrastá su aporte con el propósito.":ok(Number(T[d.tool][4][e])>=1,k+"la herramienta tiene afinidad con la experiencia.",k+"poca afinidad entre herramienta y experiencia; justificá la elección o combinala con otra."));
+  L.push(ok(!!d.f.fb,k+"está definido quién da retroalimentación.",k+"falta definir quién da retroalimentación."))});
+ L.push(ok(!!val("evidence"),"Hay evidencia definida para reconocer el aprendizaje.","falta definir qué evidencia permitirá reconocer el aprendizaje."));
+ L.push(ok(/entreg|present|produc|elabor|suba|registr|public/i.test(val("instructions")),"La consigna indica qué deben entregar o producir.","la consigna no deja claro qué deben entregar o producir."));return L}
+function sections(){const alt=[...new Set(state.exps.flatMap(e=>D(e).seen.filter(i=>i!==D(e).tool).map(i=>T[i][0])))],S=[];
+ S.push(["Propósito y contexto","Propósito: "+val("goal")+"\nContenido: "+(val("content")||"—")+"\nNecesidad o desafío: "+(val("need")||"—")+"\nDestinatarios: "+(dest()||"—")]);
+ S.push(["Experiencias de aprendizaje",state.exps.map(e=>E[e][0]+": "+E[e][1]).join("\n")+"\nAcciones de los estudiantes: "+(val("studentAction")||"—")+"\nModalidad: "+(val("modality")||"—")+"\nEvidencia de aprendizaje: "+(val("evidence")||"—")]);
+ state.exps.forEach(e=>{const f=D(e).f;S.push(["Herramienta para «"+E[e][0]+"»",tn(e)+(f.toolStatus?" ("+f.toolStatus+")":"")+"\nFundamentación: "+(f.toolReason||"—")+"\nUso previsto: "+(f.toolUse||"—")+"\nEscenario anticipado:\n"+(scenOf(e).join("\n")||"—")])});
+ S.push(["Actividad",val("activity")+"\n\nSecuencia de trabajo:\n"+(val("steps")||"—")],["Consigna para los estudiantes",val("instructions")],["Alternativas exploradas",alt.length?alt.join("\n"):"No se exploraron otras alternativas."],["Revisión de coherencia",checks().join("\n")]);return S}
+function build(){saveCur();if(!val("activity")||!val("instructions")){alert("Completá la actividad y la consigna para generar tu propuesta final.");return}
+ const o=$("out");o.innerHTML="";
+ sections().forEach(([h,t])=>{const d=el("div","os"),p=el("p");d.append(el("b","",h),p);/^(Actividad|Consigna)/.test(h)?p.textContent=t:fmt(p,t);o.append(d)});stage(5)}
+function download(){saveCur();
+ const txt="DISEÑO DE ACTIVIDAD DE ENSEÑANZA\n\n"+sections().concat([["Reflexión final",val("reflection")]]).map(([h,t])=>h.toUpperCase()+"\n"+(t||"—")).join("\n\n");
+ const u=URL.createObjectURL(new Blob([txt],{type:"text/plain;charset=utf-8"})),a=el("a");a.href=u;a.download="mi-actividad-disenada.txt";a.click();URL.revokeObjectURL(u)}
+renderExp();
+</script>
+</body>
+</html>
